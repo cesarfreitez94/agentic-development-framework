@@ -26,53 +26,25 @@ This document preserves the current state, immediate roadmap, and continuation r
 - M1.5 — Strengthen coordinator contract: clarified coordinator authority, review gates, git lifecycle rules, and operating boundaries.
 - M2 — Add ADF governance documents: added governance plans and implementation protocol for safe framework evolution.
 - M3 — Add agnostic meta schemas: added project-agnostic schemas for meta-framework artifacts and schema tests.
+- M4 — Migrate ADF OpenCode agents: 9 agents migrated, all tests pass, M4.final approved.
 
-## Current Commits
+## M4 Completion Record
 
-Recent relevant commits:
+- 9/9 agents present in `agents/opencode/`.
+- Working tree clean after all M4 sub-phases.
+- Forbidden grep clean (no FBA/Odoo coupling).
+- Dangerous permissions safe (no edit/bash allow expansion).
+- pytest 3 passed.
+- Recommendation: APPROVE_M4_COMPLETE.
 
-- `3d2cfda` Add agnostic meta schemas
-- `c287c74` Add ADF governance documents
-- `f224656` Strengthen coordinator contract
-- `532fb2b` Bootstrap agentic development framework
+### M4 Commits
 
-## Current Assets In ADF
+- `87c919f` M4.1 migrate foundational ADF opencode agents
+- `4c38940` M4.2 migrate control planning ADF opencode agents
+- `14b6370` M4.3 migrate context review ADF opencode agents
+- `58faf54` M4.4 migrate ADF git operator opencode agent
 
-- `coordinator-contract.md`
-- `docs/agents/agent-contract.md`
-- `docs/governance/candidate-mode-plan.md`
-- `docs/governance/implementation-protocol.md`
-- `schemas/meta/*.schema.json`
-- `tests/test_meta_schemas.py`
-- `tests/test_package_import.py`
-
-## Not Yet Migrated
-
-- ADF/OpenCode agents are not migrated yet.
-- Python builders/utilities are not migrated yet.
-- Runtime is not created.
-- Adapters are not created.
-- Candidate mode is not active.
-- `controlled_inspect` is not implemented.
-- `controlled_commit` is not implemented.
-
-## Next Phase
-
-M4 — Migrate ADF OpenCode agents.
-
-Source routes:
-
-- `/home/cafl/projects/factory-build-agent/.opencode/agents/framework-v2-orchestrator.md`
-- `/home/cafl/projects/factory-build-agent/.opencode/agents/framework-v2-intake.md`
-- `/home/cafl/projects/factory-build-agent/.opencode/agents/framework-v2-roadmap.md`
-- `/home/cafl/projects/factory-build-agent/.opencode/agents/framework-v2-policy.md`
-- `/home/cafl/projects/factory-build-agent/.opencode/agents/framework-v2-planner.md`
-- `/home/cafl/projects/factory-build-agent/.opencode/agents/framework-v2-packetizer.md`
-- `/home/cafl/projects/factory-build-agent/.opencode/agents/framework-v2-context-broker.md`
-- `/home/cafl/projects/factory-build-agent/.opencode/agents/framework-v2-reviewer.md`
-- `/home/cafl/projects/factory-build-agent/.opencode/agents/framework-v2-git-operator.md`
-
-Destination routes:
+### Migrated Agents
 
 - `agents/opencode/orchestrator.md`
 - `agents/opencode/intake.md`
@@ -84,16 +56,68 @@ Destination routes:
 - `agents/opencode/reviewer.md`
 - `agents/opencode/git-operator.md`
 
-## Required Adaptation For M4
+### Known Non-Blocking Gap
 
-- `framework-v2-*` must become ADF agents.
-- FBA must be replaced with ADF or generic project wording.
-- V1 FBA authority must be replaced with current bootstrap / existing project authority.
-- Odoo generator/templates/runtime must be generalized to adapters/generators/templates/runtime.
-- `.factory/meta/session_notes` must be replaced with `docs/governance` and `docs/agents`.
-- `src/fba` must be replaced with `src/agentic_development_framework` when applicable.
-- Candidate/primary/`controlled_inspect`/`controlled_commit` must remain inactive.
-- Do not change permissions to edit/bash allow.
+- `context-broker.md` lacks reciprocal "Relacion Con" sections for upstream/downstream documentation consistency.
+- This is polish only and must not block M5.
+
+## Current Commits
+
+Recent relevant commits:
+
+- `58faf54` M4.4 migrate ADF git operator opencode agent
+- `14b6370` M4.3 migrate context review ADF opencode agents
+- `4c38940` M4.2 migrate control planning ADF opencode agents
+- `87c919f` M4.1 migrate foundational ADF opencode agents
+- `3d2cfda` Add agnostic meta schemas
+- `c287c74` Add ADF governance documents
+- `f224656` Strengthen coordinator contract
+
+## Current Assets In ADF
+
+- `coordinator-contract.md`
+- `docs/agents/agent-contract.md`
+- `docs/governance/candidate-mode-plan.md`
+- `docs/governance/implementation-protocol.md`
+- `schemas/meta/*.schema.json`
+- `tests/test_meta_schemas.py`
+- `tests/test_package_import.py`
+- `agents/opencode/orchestrator.md`
+- `agents/opencode/intake.md`
+- `agents/opencode/roadmap.md`
+- `agents/opencode/policy.md`
+- `agents/opencode/planner.md`
+- `agents/opencode/packetizer.md`
+- `agents/opencode/context-broker.md`
+- `agents/opencode/reviewer.md`
+- `agents/opencode/git-operator.md`
+
+## Not Yet Migrated
+
+- Python builders/utilities are not migrated yet.
+- Builders must not be copied directly from FBA without a clean extraction strategy.
+- Runtime is not created.
+- Adapters are not created.
+- Candidate mode is not active.
+- `controlled_inspect` is not implemented.
+- `controlled_commit` is not implemented.
+
+## Next Phase
+
+M5 — Define ADF builder/runtime extraction strategy.
+
+M5 is design/governance only. No implementation, no builder migration, no runtime creation.
+
+Builders must not be copied directly from FBA without a clean extraction strategy.
+
+M5 must decide:
+
+- Which builders truly belong in ADF.
+- Which builders are conceptual vs necessary.
+- Which schemas/contracts govern each builder.
+- What minimal runtime is required.
+- What remains out of scope to avoid copying FBA/Odoo semantics.
+- How the agentic pipeline connects to future real execution.
 
 ## Explicit Do Not Do Yet
 
@@ -108,18 +132,12 @@ Destination routes:
 - Do not continue V2 development inside `factory-build-agent`.
 - Do not copy FBA/Odoo-specific semantics into ADF core.
 
-## Recommended Order After M4
+## Recommended Order After M5
 
-- M5 — Migrate Python builders/utilities one by one.
-- M5.1 — `intent_builder`.
-- M5.2 — `policy_constraints`.
-- M5.3 — `plan_builder`.
-- M5.4 — `task_packet_builder`.
-- M5.5 — `context_broker`.
-- M5.6 — `roadmap_slice_builder`.
-- M6 — Builder tests and schema validation.
-- M7 — Agnostic dry-run.
-- M8 — FBA adapter notes.
+- M6 — Implement approved builders one by one.
+- M7 — Builder tests and schema validation.
+- M8 — Agnostic dry-run.
+- M9 — FBA adapter notes.
 
 ## Coordination Rules
 
@@ -134,20 +152,20 @@ Destination routes:
 - Block out-of-context requests.
 - Keep changes small and reversible.
 
-## Definition Of Done For M4
+## Definition Of Done For M5
 
-- 9 agents migrated to `agents/opencode`.
-- Agents are ADF/generic, not FBA core.
-- No candidate/primary activation.
-- No bash/edit permission expansion.
-- Tests still pass.
-- grep for FBA/Odoo coupling reviewed.
-- Commit created only after review.
+- Design document produced (design/architectural decision document).
+- Builder inventory decided (which are in ADF, which deferred, which out of scope).
+- Schema/contract map per builder.
+- Minimal runtime boundary defined.
+- Out-of-scope boundaries documented (no FBA/Odoo semantics).
+- Agentic pipeline → real execution connection sketched.
+- No implementation, no code migration, no runtime created.
 
 ## First Prompt For Next Session
 
 ```text
-Read coordinator-contract.md and docs/governance/extraction-handoff.md. Continue from M4 — Migrate ADF OpenCode agents. Do not migrate builders yet.
+Read coordinator-contract.md and docs/governance/extraction-handoff.md. Continue from M5 — Define ADF builder/runtime extraction strategy. M5 is design/governance only. Do not migrate builders, do not create runtime. Do not copy builders directly from FBA without a clean extraction strategy.
 ```
 
 ## Risks
@@ -157,7 +175,7 @@ Read coordinator-contract.md and docs/governance/extraction-handoff.md. Continue
 - Copying FBA/Odoo coupling into ADF core.
 - Accidentally activating candidate.
 - Creating broad agents or superagents.
-- Overengineering before M4.
+- Overengineering before M5 design is approved.
 
 ## Usage
 
