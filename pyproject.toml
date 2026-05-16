@@ -1,0 +1,23 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "agentic-development-framework"
+version = "0.1.0"
+description = "Contract-driven meta-framework for coordinating agentic software milestone execution."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/agentic_development_framework"]
