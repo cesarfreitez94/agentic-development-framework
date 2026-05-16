@@ -27,6 +27,7 @@ This document preserves the current state, immediate roadmap, and continuation r
 - M2 — Add ADF governance documents: added governance plans and implementation protocol for safe framework evolution.
 - M3 — Add agnostic meta schemas: added project-agnostic schemas for meta-framework artifacts and schema tests.
 - M4 — Migrate ADF OpenCode agents: 9 agents migrated, all tests pass, M4.final approved.
+- M5 — Define ADF builder/runtime extraction strategy: design document produced, no implementation, no builder migration, no runtime created.
 
 ## M4 Completion Record
 
@@ -61,6 +62,20 @@ This document preserves the current state, immediate roadmap, and continuation r
 - `context-broker.md` lacks reciprocal "Relacion Con" sections for upstream/downstream documentation consistency.
 - This is polish only and must not block M5.
 
+## M5 Completion Record
+
+- `docs/governance/builder-runtime-extraction-strategy.md` created with all 16 required sections.
+- Strategy defines: builder definition, contract shape, schema consumption, core vs adapter boundary, candidate builder list (13 builders across M5.1–M5.13), runtime boundary, migration checklist, review gates, stop conditions, risks, anti-overengineering rules, and next phases.
+- No implementation, no builder migration, no runtime created.
+- No FBA builder copying.
+- No forbidden files touched.
+- Pending coordinator review and owner approval before M5.1.
+- Coordinator review: requested changes before approval.
+
+### M5 Commit
+
+- (pending review approval — no commit created yet)
+
 ## Current Commits
 
 Recent relevant commits:
@@ -79,6 +94,7 @@ Recent relevant commits:
 - `docs/agents/agent-contract.md`
 - `docs/governance/candidate-mode-plan.md`
 - `docs/governance/implementation-protocol.md`
+- `docs/governance/builder-runtime-extraction-strategy.md`
 - `schemas/meta/*.schema.json`
 - `tests/test_meta_schemas.py`
 - `tests/test_package_import.py`
@@ -95,7 +111,8 @@ Recent relevant commits:
 ## Not Yet Migrated
 
 - Python builders/utilities are not migrated yet.
-- Builders must not be copied directly from FBA without a clean extraction strategy.
+- Builders must not be copied directly from FBA without a clean extraction strategy (strategy now defined in M5).
+- Builder extraction strategy is complete; individual builder extraction begins at M5.1.
 - Runtime is not created.
 - Adapters are not created.
 - Candidate mode is not active.
@@ -104,20 +121,19 @@ Recent relevant commits:
 
 ## Next Phase
 
-M5 — Define ADF builder/runtime extraction strategy.
+M5.1 — Design and implement `build_intent`, the first ADF programmatic builder.
 
-M5 is design/governance only. No implementation, no builder migration, no runtime creation.
+M5.1 is the first implementation phase after M5 strategy approval. It must:
 
-Builders must not be copied directly from FBA without a clean extraction strategy.
-
-M5 must decide:
-
-- Which builders truly belong in ADF.
-- Which builders are conceptual vs necessary.
-- Which schemas/contracts govern each builder.
-- What minimal runtime is required.
-- What remains out of scope to avoid copying FBA/Odoo semantics.
-- How the agentic pipeline connects to future real execution.
+- Design `build_intent` from `schemas/meta/intent.schema.json`.
+- Implement the builder as a pure, deterministic Python callable.
+- Include schema validation tests.
+- Follow the builder contract shape defined in `docs/governance/builder-runtime-extraction-strategy.md`.
+- Pass all M5.x review gates (G1–G7).
+- Touch only allowed files (builder file, test file, possibly `src/adf/` structure).
+- Not reference FBA source code.
+- Not create runtime or adapters.
+- Not activate candidate or primary mode.
 
 ## Explicit Do Not Do Yet
 
@@ -132,11 +148,23 @@ M5 must decide:
 - Do not continue V2 development inside `factory-build-agent`.
 - Do not copy FBA/Odoo-specific semantics into ADF core.
 
-## Recommended Order After M5
+## Recommended Order After M5.1
 
-- M6 — Implement approved builders one by one.
-- M7 — Builder tests and schema validation.
-- M8 — Agnostic dry-run.
+- M5.2 — Design and implement `build_policy_constraints`.
+- M5.3 — Design and implement `build_roadmap_slice`.
+- M5.4 — Design and implement `build_plan`.
+- M5.5 — Design and implement `build_task_packet`.
+- M5.6 — Design and implement `build_context_bundle`.
+- M5.7 — Design and implement `build_implementation_report`.
+- M5.8 — Design and implement `build_test_report`.
+- M5.9 — Design and implement `build_review_report`.
+- M5.10 — Design and implement `build_git_operation`.
+- M5.11 — Design and implement `build_decisions`.
+- M5.12 — Design and implement `build_framework_state`.
+- M5.13 — Design and implement `build_schema_catalog`.
+- M6 — Builder tests and schema validation hardening.
+- M7 — Agnostic dry-run.
+- M8 — Minimal runtime design and implementation.
 - M9 — FBA adapter notes.
 
 ## Coordination Rules
@@ -152,20 +180,22 @@ M5 must decide:
 - Block out-of-context requests.
 - Keep changes small and reversible.
 
-## Definition Of Done For M5
+## Definition Of Done For M5.1
 
-- Design document produced (design/architectural decision document).
-- Builder inventory decided (which are in ADF, which deferred, which out of scope).
-- Schema/contract map per builder.
-- Minimal runtime boundary defined.
-- Out-of-scope boundaries documented (no FBA/Odoo semantics).
-- Agentic pipeline → real execution connection sketched.
-- No implementation, no code migration, no runtime created.
+- `build_intent` Python callable implemented in `src/adf/builders/`.
+- Schema validation test passes against `schemas/meta/intent.schema.json`.
+- Determinism test passes (same input × 3 = same output).
+- Error handling test passes (invalid input → `ValueError`, invalid output → `SchemaValidationError`).
+- No FBA source references in builder code or tests.
+- No forbidden files touched.
+- `pyproject.toml` updated only if new test dependencies are needed (requires prior approval).
+- Coordinator review approved.
+- Working tree clean or pending work explicit.
 
 ## First Prompt For Next Session
 
 ```text
-Read coordinator-contract.md and docs/governance/extraction-handoff.md. Continue from M5 — Define ADF builder/runtime extraction strategy. M5 is design/governance only. Do not migrate builders, do not create runtime. Do not copy builders directly from FBA without a clean extraction strategy.
+Read coordinator-contract.md and docs/governance/extraction-handoff.md. Continue from M5.1 — Design and implement build_intent, the first ADF programmatic builder. Follow docs/governance/builder-runtime-extraction-strategy.md for contract shape, review gates, and stop conditions. Do not reference FBA source code. Do not create runtime or adapters. Do not activate candidate or primary mode.
 ```
 
 ## Risks
