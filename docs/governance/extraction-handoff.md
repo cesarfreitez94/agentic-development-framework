@@ -27,7 +27,22 @@ This document preserves the current state, immediate roadmap, and continuation r
 - M2 — Add ADF governance documents: added governance plans and implementation protocol for safe framework evolution.
 - M3 — Add agnostic meta schemas: added project-agnostic schemas for meta-framework artifacts and schema tests.
 - M4 — Migrate ADF OpenCode agents: 9 agents migrated, all tests pass, M4.final approved.
-- M5 — Define ADF builder/runtime extraction strategy: design document produced, no implementation, no builder migration, no runtime created.
+- M5 — Define ADF builder/runtime extraction strategy: design document produced.
+- M5.audit — Remaining schema audit (M5.7–M5.13): confirmed all 7 schemas structurally identical to FBA originals, no alignment phase needed.
+- M5.1 — build_intent: implemented and tested.
+- M5.2 — build_policy_constraints: implemented and tested.
+- M5.3 — build_roadmap_slice: implemented and tested.
+- M5.4 — build_plan: implemented and tested.
+- M5.5 — build_task_packet: implemented and tested.
+- M5.6 — build_context_bundle: implemented and tested.
+- M5.7 — build_implementation_report: implemented and tested.
+- M5.8 — build_test_report: implemented and tested.
+- M5.9 — build_review_report: implemented and tested.
+- M5.10 — build_git_operation: implemented and tested.
+- M5.11 — build_decisions: implemented and tested.
+- M5.12 — build_framework_state: implemented and tested.
+- M5.13 — build_schema_catalog: implemented and tested.
+- M5 — FULLY COMPLETE. All 13 programmatic builders extracted, tested, and reviewed.
 
 ## M4 Completion Record
 
@@ -64,29 +79,72 @@ This document preserves the current state, immediate roadmap, and continuation r
 
 ## M5 Completion Record
 
-- `docs/governance/builder-runtime-extraction-strategy.md` created with all 16 required sections.
-- Strategy defines: builder definition, contract shape, schema consumption, core vs adapter boundary, candidate builder list (13 builders across M5.1–M5.13), runtime boundary, migration checklist, review gates, stop conditions, risks, anti-overengineering rules, and next phases.
-- No implementation, no builder migration, no runtime created.
-- No FBA builder copying.
-- No forbidden files touched.
-- Pending coordinator review and owner approval before M5.1.
-- Coordinator review: requested changes before approval.
+All M5 phases complete. The full builder test suite passes with 215 tests.
 
-### M5 Commit
+### What M5 Produced (Programmatic Builders Only)
 
-- (pending review approval — no commit created yet)
+- 13 programmatic builders in `src/agentic_development_framework/builders/`
+- 13 corresponding test files in `tests/test_build_*.py`
+- All builders are pure, deterministic Python callables conforming to the contract shape in `docs/governance/builder-runtime-extraction-strategy.md`
+- No runtime created.
+- No adapters created.
+- No registry created.
+- No CLI created.
+- No direct FBA builder copy (all builders derived from ADF schema contracts only).
+- No schema mutation during builder phases (schemas untouched since M3).
+- No agents modified.
+- No pyproject.toml modified.
+
+### M5 Commits
+
+- `5bc29bf` Implement ADF schema catalog builder
+- `d55e550` Implement ADF framework state builder
+- `50b7a2e` Implement ADF decisions builder
+- `f0efb16` Implement ADF git operation builder
+- `aed76fb` Implement ADF review report builder
+- `e47bf0c` Implement ADF test report builder
+- `8fc124b` Implement ADF implementation report builder
+- `98d7e6f` Audit remaining ADF meta schemas
+- `288e05a` Implement ADF context bundle builder
+- `55c1dcc` Implement ADF task packet builder
+- `f10b123` Implement ADF plan builder
+- `ef7dd0b` Implement ADF roadmap slice builder
+- `6a56e1b` Implement ADF policy constraints builder
+- `09742ca` Implement ADF intent builder
+- `d28b620` Define ADF builder runtime extraction strategy
+
+### Test Suite Evidence
+
+- 215 tests passed (all tests in `tests/`).
+- 212 builder tests across 13 test files.
+- 3 schema/package tests (test_meta_schemas.py, test_package_import.py).
+- All tests deterministic; all builders produce idempotent outputs.
+- Zero FBA source references in any builder or test file.
+- Zero forbidden files touched during any M5.x phase.
+
+### Latest Local HEAD
+
+- `5bc29bf` — 2026-05-16 — Implement ADF schema catalog builder
 
 ## Current Commits
 
-Recent relevant commits:
+Recent relevant commits (full M5 chain):
 
-- `58faf54` M4.4 migrate ADF git operator opencode agent
-- `14b6370` M4.3 migrate context review ADF opencode agents
-- `4c38940` M4.2 migrate control planning ADF opencode agents
-- `87c919f` M4.1 migrate foundational ADF opencode agents
-- `3d2cfda` Add agnostic meta schemas
-- `c287c74` Add ADF governance documents
-- `f224656` Strengthen coordinator contract
+- `5bc29bf` Implement ADF schema catalog builder (M5.13)
+- `d55e550` Implement ADF framework state builder (M5.12)
+- `50b7a2e` Implement ADF decisions builder (M5.11)
+- `f0efb16` Implement ADF git operation builder (M5.10)
+- `aed76fb` Implement ADF review report builder (M5.9)
+- `e47bf0c` Implement ADF test report builder (M5.8)
+- `8fc124b` Implement ADF implementation report builder (M5.7)
+- `98d7e6f` Audit remaining ADF meta schemas (M5.audit)
+- `288e05a` Implement ADF context bundle builder (M5.6)
+- `55c1dcc` Implement ADF task packet builder (M5.5)
+- `f10b123` Implement ADF plan builder (M5.4)
+- `ef7dd0b` Implement ADF roadmap slice builder (M5.3)
+- `6a56e1b` Implement ADF policy constraints builder (M5.2)
+- `09742ca` Implement ADF intent builder (M5.1)
+- `d28b620` Define ADF builder runtime extraction strategy (M5)
 
 ## Current Assets In ADF
 
@@ -95,9 +153,37 @@ Recent relevant commits:
 - `docs/governance/candidate-mode-plan.md`
 - `docs/governance/implementation-protocol.md`
 - `docs/governance/builder-runtime-extraction-strategy.md`
-- `schemas/meta/*.schema.json`
+- `docs/governance/m5-remaining-schema-audit.md`
+- `schemas/meta/*.schema.json` (13 schema contracts)
+- `src/agentic_development_framework/builders/__init__.py`
+- `src/agentic_development_framework/builders/intent.py`
+- `src/agentic_development_framework/builders/policy_constraints.py`
+- `src/agentic_development_framework/builders/roadmap_slice.py`
+- `src/agentic_development_framework/builders/plan.py`
+- `src/agentic_development_framework/builders/task_packet.py`
+- `src/agentic_development_framework/builders/context_bundle.py`
+- `src/agentic_development_framework/builders/implementation_report.py`
+- `src/agentic_development_framework/builders/test_report.py`
+- `src/agentic_development_framework/builders/review_report.py`
+- `src/agentic_development_framework/builders/git_operation.py`
+- `src/agentic_development_framework/builders/decisions.py`
+- `src/agentic_development_framework/builders/framework_state.py`
+- `src/agentic_development_framework/builders/schema_catalog.py`
 - `tests/test_meta_schemas.py`
 - `tests/test_package_import.py`
+- `tests/test_build_intent.py`
+- `tests/test_build_policy_constraints.py`
+- `tests/test_build_roadmap_slice.py`
+- `tests/test_build_plan.py`
+- `tests/test_build_task_packet.py`
+- `tests/test_build_context_bundle.py`
+- `tests/test_build_implementation_report.py`
+- `tests/test_build_test_report.py`
+- `tests/test_build_review_report.py`
+- `tests/test_build_git_operation.py`
+- `tests/test_build_decisions.py`
+- `tests/test_build_framework_state.py`
+- `tests/test_build_schema_catalog.py`
 - `agents/opencode/orchestrator.md`
 - `agents/opencode/intake.md`
 - `agents/opencode/roadmap.md`
@@ -108,64 +194,60 @@ Recent relevant commits:
 - `agents/opencode/reviewer.md`
 - `agents/opencode/git-operator.md`
 
-## Not Yet Migrated
+## Not Yet Migrated / Not Yet Created
 
-- Python builders/utilities are not migrated yet.
-- Builders must not be copied directly from FBA without a clean extraction strategy (strategy now defined in M5).
-- Builder extraction strategy is complete; individual builder extraction begins at M5.1.
+- Python programmatic builders are **fully migrated** (M5.1–M5.13 complete).
 - Runtime is not created.
 - Adapters are not created.
 - Candidate mode is not active.
 - `controlled_inspect` is not implemented.
 - `controlled_commit` is not implemented.
+- No builder invocation/runtime strategy exists yet.
 
 ## Next Phase
 
-M5.1 — Design and implement `build_intent`, the first ADF programmatic builder.
+M6 — Design minimal builder invocation/runtime strategy.
 
-M5.1 is the first implementation phase after M5 strategy approval. It must:
+All M5 builder phases are complete. The next phase must shift from builder extraction to runtime/invocation design. M6 should:
 
-- Design `build_intent` from `schemas/meta/intent.schema.json`.
-- Implement the builder as a pure, deterministic Python callable.
-- Include schema validation tests.
-- Follow the builder contract shape defined in `docs/governance/builder-runtime-extraction-strategy.md`.
-- Pass all M5.x review gates (G1–G7).
-- Touch only allowed files (builder file, test file, possibly `src/adf/` structure).
-- Not reference FBA source code.
-- Not create runtime or adapters.
+- Design a minimal strategy for invoking builders (sequencing, input wiring, output storage).
+- Define the artifact store layout (e.g., `.adf/artifacts/`).
+- Define how `framework_state` is updated by builder invocations.
+- Define the boundary between the runtime (builder executor) and the orchestrator (agentic coordination).
+- Remain a design/governance phase: no runtime implementation yet.
+- Follow the runtime boundary defined in `docs/governance/builder-runtime-extraction-strategy.md` section 11.
 - Not activate candidate or primary mode.
+- Not modify builders, schemas, agents, or tests.
+
+Alternative naming if the existing roadmap naming differs:
+- Next phase pending coordinator decision: minimal runtime/orchestration design after M5 builder completion.
 
 ## Explicit Do Not Do Yet
 
-- Do not migrate Python builders before agents.
-- Do not migrate `meta_workflow_migration.py` yet.
+- Do not create more M5 builders (all 13 are complete).
+- Do not modify existing builders.
+- Do not modify tests.
+- Do not modify schemas.
+- Do not modify agents.
+- Do not modify pyproject.toml.
 - Do not create runtime.
 - Do not create adapters.
+- Do not create builder registry.
+- Do not create builder CLI.
 - Do not activate candidate.
 - Do not activate primary.
 - Do not implement `controlled_inspect`.
 - Do not implement `controlled_commit`.
 - Do not continue V2 development inside `factory-build-agent`.
 - Do not copy FBA/Odoo-specific semantics into ADF core.
+- Do not inspect FBA source.
 
-## Recommended Order After M5.1
+## Recommended Order After M5
 
-- M5.2 — Design and implement `build_policy_constraints`.
-- M5.3 — Design and implement `build_roadmap_slice`.
-- M5.4 — Design and implement `build_plan`.
-- M5.5 — Design and implement `build_task_packet`.
-- M5.6 — Design and implement `build_context_bundle`.
-- M5.7 — Design and implement `build_implementation_report`.
-- M5.8 — Design and implement `build_test_report`.
-- M5.9 — Design and implement `build_review_report`.
-- M5.10 — Design and implement `build_git_operation`.
-- M5.11 — Design and implement `build_decisions`.
-- M5.12 — Design and implement `build_framework_state`.
-- M5.13 — Design and implement `build_schema_catalog`.
-- M6 — Builder tests and schema validation hardening.
-- M7 — Agnostic dry-run.
+- M6 — Design minimal builder invocation/runtime strategy (design/governance only, no implementation).
+- M7 — Agnostic dry-run with builder pipeline.
 - M8 — Minimal runtime design and implementation.
-- M9 — FBA adapter notes.
+- M9 — FBA adapter notes (adapter layer, not core).
 
 ## Coordination Rules
 
@@ -180,32 +262,29 @@ M5.1 is the first implementation phase after M5 strategy approval. It must:
 - Block out-of-context requests.
 - Keep changes small and reversible.
 
-## Definition Of Done For M5.1
+## M5 Closeout Notes
 
-- `build_intent` Python callable implemented in `src/adf/builders/`.
-- Schema validation test passes against `schemas/meta/intent.schema.json`.
-- Determinism test passes (same input × 3 = same output).
-- Error handling test passes (invalid input → `ValueError`, invalid output → `SchemaValidationError`).
-- No FBA source references in builder code or tests.
-- No forbidden files touched.
-- `pyproject.toml` updated only if new test dependencies are needed (requires prior approval).
-- Coordinator review approved.
-- Working tree clean or pending work explicit.
+- Push remains pending by owner policy until M5 closeout is reviewed and committed.
+- All 13 builders follow the contract shape in `docs/governance/builder-runtime-extraction-strategy.md`.
+- No builder violates the anti-overengineering rules (no base class, no DI, no plugin system, no middleware, no CLI, no async, no web API, no caching).
+- Working tree is clean.
+- Next phase: M6 (minimal builder invocation/runtime strategy design).
 
 ## First Prompt For Next Session
 
 ```text
-Read coordinator-contract.md and docs/governance/extraction-handoff.md. Continue from M5.1 — Design and implement build_intent, the first ADF programmatic builder. Follow docs/governance/builder-runtime-extraction-strategy.md for contract shape, review gates, and stop conditions. Do not reference FBA source code. Do not create runtime or adapters. Do not activate candidate or primary mode.
+Read coordinator-contract.md and docs/governance/extraction-handoff.md. Continue from M6 — Design minimal builder invocation/runtime strategy. All M5 builders are complete (13 builders, 215 tests passing). Do not modify builders, tests, schemas, agents, or pyproject.toml. Do not create runtime or adapters. Do not activate candidate or primary mode. Follow the runtime boundary defined in docs/governance/builder-runtime-extraction-strategy.md section 11.
 ```
 
 ## Risks
 
 - Losing context and restarting wrong phase.
-- Migrating utilities before agents.
-- Copying FBA/Odoo coupling into ADF core.
+- Prematurely creating runtime before invocation strategy is designed.
+- Copying FBA/Odoo coupling into runtime design.
 - Accidentally activating candidate.
-- Creating broad agents or superagents.
-- Overengineering before M5 design is approved.
+- Overengineering the runtime/invocation layer.
+- Modifying builders, tests, or schemas during M6 (out of scope).
+- Push remaining pending too long without review/commit.
 
 ## Usage
 
