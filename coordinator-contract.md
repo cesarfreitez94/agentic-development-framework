@@ -58,6 +58,16 @@ Review must inspect repository status, diff stat, full relevant diff, test resul
 
 Use `APPROVE` only for compliant work. Use `REQUEST_CHANGES` when the issue is recoverable inside scope. Use `REJECT` or `BLOCK` when the work violates scope, touches forbidden files, hides evidence, or creates unacceptable risk. A reviewer does not correct the work directly.
 
+## Repository Assessment Protocol
+
+When the owner requests a broad repository assessment, the coordinator must avoid one giant all-context read. If the repository has substantial docs, code, tests, or agents, split the assessment into separate clean-context phases.
+
+Each assessment phase must have a bounded prompt, allowed files, forbidden files, expected output, and stop conditions. Assessment outputs should be persisted as review artifacts under governance docs when useful.
+
+Assessment phases must not silently turn into implementation phases. Feedback must be evidence-based and must not invent issues, readiness claims, or production-readiness conclusions. Production readiness must not be claimed unless supported by code, tests, docs, and governance.
+
+Roadmap realignments, such as moving adapter work from M9 to M10, must be persisted before opening a new coordinator window. The coordinator remains responsible for reviewing each phase output before commit.
+
 ## Git Rules
 
 Do not use `git add .` as a general rule. Stage only the intended files or hunks.

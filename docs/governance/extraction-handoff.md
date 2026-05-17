@@ -13,6 +13,15 @@ This document preserves the current state, immediate roadmap, and continuation r
 - primary mode: not active
 - controlled_inspect: not active
 - controlled_commit: not active
+- latest HEAD/origin main at M8.3 start: `b2b18fb` (`Update extraction handoff after M8.1 completion`)
+
+## Current Milestone State
+
+- M8.1 is complete, committed, and pushed as `7d6608f`.
+- M8.2 is complete, committed, and pushed as `b2b18fb`.
+- M8.3 persists the repository assessment roadmap and coordinator protocol before any M9 assessment or M10 adapter work.
+- M9 is repository assessment and ADF readiness review; M9.1 is proposed next but not automatically authorized.
+- M10 is FBA adapter boundary and adapter notes; M10 is not authorized by this handoff.
 
 ## Source Repository
 
@@ -46,6 +55,8 @@ This document preserves the current state, immediate roadmap, and continuation r
 - M6.1 — Define minimal builder invocation/runtime strategy: design/governance document committed as `ab023d6`. Created `docs/governance/minimal-builder-invocation-runtime-strategy.md`. Defines the future minimal runtime as builder executor + artifact store + validation/evidence producer + framework_state update proposal producer. Runtime is explicitly non-autonomous and non-decision-making. No code, no runtime, no registry, no CLI, no adapters were created.
 - M7.1 — Define agnostic dry-run design and evidence: design/governance document created as `docs/governance/agnostic-dry-run-design-and-evidence.md`. Defines a future/conceptual dry-run as caller-driven, non-persistent, evidence-producing only. M7 is complete as design/governance. Dry-run is design-only: no builder invocation, no artifact writes, no framework_state mutation, no git execution, no agent invocation, no mode activation. Semantic comparison is review-oriented and not automatic acceptance. Pipeline scenario is illustrative, not an autonomous runtime plan. M8 requires explicit owner authorization before any code-producing work.
 - M8.1 — Implement minimal ADF runtime invocation: added `src/agentic_development_framework/runtime/__init__.py`, `src/agentic_development_framework/runtime/invocation.py`, `tests/test_runtime_invocation.py`, `tests/test_runtime_dry_run.py`. Runtime exposes `invoke_builder`. Runtime invokes explicitly selected builders via a static `_SUPPORTED_BUILDERS` mapping. Runtime validates produced artifacts against schemas and returns structured invocation evidence. Runtime supports dry-run evidence in memory without persistence, confirms no-write/no-git in dry-run evidence, and can optionally persist valid artifacts only when caller explicitly provides `store=True`, `artifact_root`, and `output_path`. Runtime produces `framework_state` proposal/preview only and does not mutate `framework_state`. Runtime remains minimal, non-autonomous, and does not invoke agents, execute git, or activate candidate or primary mode. Tests passed: 227.
+- M8.2 — Update extraction handoff after M8.1 completion: complete, committed, and pushed as `b2b18fb` (`Update extraction handoff after M8.1 completion`). Latest HEAD/origin main was `b2b18fb` when M8.3 began.
+- M8.3 — Persist repository assessment roadmap and coordinator protocol: documentation/governance-only phase that records M9 as repository assessment/readiness review and moves previous adapter-focused M9 to M10. No runtime features, adapters, CLI, tests, schemas, agents, README update, assessment files, or `.adf/` artifact store are created by M8.3.
 
 ## M4 Completion Record
 
@@ -125,9 +136,9 @@ All M5 phases complete. The full builder test suite passes with 215 tests.
 - Zero FBA source references in any builder or test file.
 - Zero forbidden files touched during any M5.x phase.
 
-### Latest Local HEAD
+### Latest HEAD / Origin Main Baseline
 
-- `7d6608f` — 2026-05-17 — Implement minimal ADF runtime invocation
+- `b2b18fb` — 2026-05-17 — Update extraction handoff after M8.1 completion. This was the latest `HEAD`/`origin/main` when M8.3 began.
 
 ## M6.1 Completion Record
 
@@ -173,7 +184,7 @@ M7.1 created `docs/governance/agnostic-dry-run-design-and-evidence.md`, defining
 
 ## M8.1 Completion Record
 
-M8.1 implemented the minimal ADF runtime invocation (`invoke_builder`). Committed as `7d6608f`.
+M8.1 implemented the minimal ADF runtime invocation (`invoke_builder`). It is complete, committed, and pushed as `7d6608f`.
 
 ### What M8.1 Produced
 
@@ -214,10 +225,39 @@ M8.1 implemented the minimal ADF runtime invocation (`invoke_builder`). Committe
 - 12 runtime tests (test_runtime_invocation.py: 149 lines, test_runtime_dry_run.py: 68 lines).
 - All tests deterministic. Zero forbidden files touched.
 
+## M8.2 Completion Record
+
+M8.2 updated this extraction handoff after M8.1 completion. It is complete, committed, and pushed as `b2b18fb` (`Update extraction handoff after M8.1 completion`). At the start of M8.3, `b2b18fb` was the latest `HEAD`/`origin/main`.
+
+### What M8.2 Produced
+
+- Updated `docs/governance/extraction-handoff.md` to preserve M8.1 status, runtime boundaries, and next-phase gates.
+- No source, test, schema, agent, adapter, CLI, or runtime behavior changes.
+
+## M8.3 Completion Record
+
+M8.3 persists the owner/coordinator decision that the next phase is repository assessment/readiness review before any adapter or FBA work. M8.3 is documentation/governance only and does not authorize implementation.
+
+### What M8.3 Produces
+
+- Updates `coordinator-contract.md` with a repository assessment protocol for clean-context assessment phases.
+- Updates this handoff to define M9 as repository assessment and ADF readiness review.
+- Moves the previous adapter-focused M9 to M10 as `M10 — FBA adapter boundary and adapter notes`.
+- Creates no assessment artifacts, runtime features, adapters, CLI, `.adf/` artifact store, source changes, test changes, schema changes, agent changes, or README update.
+
+### Key M8.3 Decisions
+
+1. M9 is now `M9 — Repository assessment and ADF readiness review`.
+2. The previous adapter-focused M9 is now `M10 — FBA adapter boundary and adapter notes`.
+3. Before connecting ADF to FBA/adapters, the repo needs an evidence-based assessment of actual current capabilities, gaps, risks, readiness, documentation accuracy, and governance consistency.
+4. M9 is review/governance/documentation only unless explicitly authorized otherwise.
+5. M9.1 is the next proposed phase, but it is not automatically implemented by this handoff.
+
 ## Current Commits
 
-Recent relevant commits (M7.1, M6.1, plus full M5 chain):
+Recent relevant commits:
 
+- `b2b18fb` Update extraction handoff after M8.1 completion (M8.2; latest HEAD/origin main when M8.3 began)
 - `7d6608f` Implement minimal ADF runtime invocation (M8.1)
 - `3b811a5` Define agnostic dry-run design and evidence (M7.1)
 - `c300802` Update extraction handoff after M6.1 completion
@@ -296,8 +336,10 @@ Recent relevant commits (M7.1, M6.1, plus full M5 chain):
 
 - Python programmatic builders are **fully migrated** (M5.1–M5.13 complete).
 - Minimal runtime exists (M8.1): `invoke_builder` with static builder mapping, schema validation, structured evidence, dry-run support, and optional artifact persistence. No registry, no CLI, no adapters, no git execution, no agent invocation, no mode activation.
-- Remaining M8 scope not yet implemented: artifact store layout (`.adf/`), `metadata.json` inventory, persistence beyond optional `store=True`.
-- Adapters are not created.
+- Remaining M8 runtime/persistence scope is not authorized by this handoff: artifact store layout (`.adf/`), `metadata.json` inventory, and persistence beyond optional `store=True` remain gated.
+- Repository assessment artifacts are not created yet; M9.1 has not started.
+- Adapters are not created. Adapter-focused work has moved from M9 to M10 and is not authorized by this handoff.
+- ADF is not claimed production-ready and is not claimed ready for FBA integration.
 - Candidate mode is not active.
 - `controlled_inspect` is not implemented.
 - `controlled_commit` is not implemented.
@@ -306,18 +348,25 @@ Recent relevant commits (M7.1, M6.1, plus full M5 chain):
 
 ## Next Phase
 
-M8.1 is complete as minimal runtime invocation (`7d6608f`). The runtime exposes `invoke_builder` with explicit static builder mapping, schema validation, structured evidence, dry-run support, and optional artifact persistence. Remaining M8 scope (artifact store layout, `metadata.json` inventory, full persistence) is proposed but **requires explicit owner authorization** before any further code-producing work.
+M8.1 is complete, committed, and pushed as minimal runtime invocation (`7d6608f`). M8.2 is complete, committed, and pushed as extraction handoff update (`b2b18fb`). The latest HEAD/origin main when M8.3 began was `b2b18fb` (`Update extraction handoff after M8.1 completion`).
 
-**M8.1 does not automatically authorize further M8 sub-phases.** Any additional M8 implementation — artifact store layout (`.adf/`) creation, `metadata.json` inventory, builder registry, CLI, adapters, git execution, agent invocation, or mode activation — remains gated behind explicit owner authorization.
+M9 is now defined as `M9 — Repository assessment and ADF readiness review`. The previous adapter-focused M9 is moved to `M10 — FBA adapter boundary and adapter notes`.
 
-Until further M8 sub-phases are authorized, the next session continues with the existing minimal runtime boundaries. Do NOT create `.adf/` directories, registry, CLI, or adapters. Do NOT add git execution, agent invocation, or mode activation. Do NOT claim candidate or primary readiness.
+Reason for this roadmap change: before connecting ADF to FBA/adapters, the repo needs an evidence-based assessment of actual current capabilities, gaps, risks, readiness, documentation accuracy, and governance consistency.
 
-Proposed M8 remainder scope (candidate, not authorized by this handoff):
-- Implement the artifact store layout from M6.1 Section 4 (`.adf/artifacts/`, `metadata.json`).
-- Implement cross-invocation artifact referencing and resolution.
-- Implement validation report file persistence.
-- Extend runtime tests for multi-invocation scenarios.
-- No autonomous execution, no agent invocation, no git, no mode activation.
+M9 is review/governance/documentation only unless explicitly authorized otherwise. M9 must not implement runtime features, create adapters, create CLI, activate candidate or primary mode, add git execution, add agent invocation, mutate `framework_state`, or create `.adf/` artifact store unless separately authorized.
+
+M9 must be executed as separate clean-context subphases to avoid context pollution:
+
+- M9.1 — Repository map assessment.
+- M9.2 — Governance and milestone consistency assessment.
+- M9.3 — Code/runtime/schema assessment.
+- M9.4 — Tests/agents/documentation assessment.
+- M9.5 — Consolidated repository assessment + README/handoff update.
+
+Each M9 subphase must be run in a separate OpenCode session/prompt. Each M9 subphase must produce a persistent assessment artifact or controlled documentation update. Each M9 subphase requires coordinator review before commit.
+
+M9.1 is the next proposed phase, but it is not automatically implemented by this handoff. M10 adapter work is not authorized.
 
 ## Explicit Do Not Do Yet
 
@@ -327,25 +376,44 @@ Proposed M8 remainder scope (candidate, not authorized by this handoff):
 - Do not modify schemas.
 - Do not modify agents.
 - Do not modify pyproject.toml.
-- Do not create `.adf/` artifact store directories or `metadata.json`.
-- Do not create adapters.
+- Do not create `.adf/` artifact store directories or `metadata.json` unless separately authorized.
+- Do not create assessment files before an explicit M9 subphase prompt authorizes them.
+- Do not create `docs/governance/assessment/**` or `docs/governance/repository-assessment.md` during M8.3.
+- Do not start M9.1 unless the owner explicitly authorizes it.
+- Do not treat M9 as an implementation phase.
+- Do not implement runtime features during M9 unless explicitly authorized otherwise.
+- Do not create adapters. Adapter work is now M10 and is not authorized by this handoff.
 - Do not create builder registry.
 - Do not create builder CLI.
 - Do not activate candidate.
 - Do not activate primary.
+- Do not add git execution.
+- Do not add agent invocation.
+- Do not mutate `framework_state`.
 - Do not implement `controlled_inspect`.
 - Do not implement `controlled_commit`.
 - Do not continue V2 development inside `factory-build-agent`.
 - Do not copy FBA/Odoo-specific semantics into ADF core.
 - Do not inspect FBA source.
 - Do not begin further M8 sub-phases without explicit owner authorization.
+- Do not begin M10 adapter boundary or adapter notes without explicit owner authorization.
+- Do not claim the repository is production-ready.
+- Do not claim ADF is ready for FBA integration.
 
-## Recommended Order After M5
+## Recommended Order
 
 - M6.1 — Define minimal builder invocation/runtime strategy (design/governance only, no implementation). **COMPLETE.**
 - M7 — Agnostic dry-run design and evidence (design/governance only). **COMPLETE.**
-- M8 — Minimal runtime implementation (earliest code phase after M7). **M8.1 COMPLETE.** Remaining M8 sub-phases **require explicit owner authorization.**
-- M9 — FBA adapter notes (adapter layer, not core).
+- M8.1 — Minimal runtime invocation. **COMPLETE, COMMITTED, PUSHED.**
+- M8.2 — Extraction handoff update after M8.1. **COMPLETE, COMMITTED, PUSHED.**
+- M8.3 — Repository assessment roadmap and coordinator protocol. Documentation/governance only; no runtime behavior changes. **COMPLETE when this handoff and coordinator contract are reviewed, committed, and pushed.**
+- M9 — Repository assessment and ADF readiness review. **NEXT PROPOSED PHASE; NOT AUTOMATICALLY STARTED.**
+- M9.1 — Repository map assessment. **NEXT PROPOSED SUBPHASE; requires explicit owner authorization.**
+- M9.2 — Governance and milestone consistency assessment. Requires separate clean-context session and coordinator review.
+- M9.3 — Code/runtime/schema assessment. Requires separate clean-context session and coordinator review.
+- M9.4 — Tests/agents/documentation assessment. Requires separate clean-context session and coordinator review.
+- M9.5 — Consolidated repository assessment + README/handoff update. Requires separate clean-context session and coordinator review.
+- M10 — FBA adapter boundary and adapter notes. **NOT AUTHORIZED.**
 
 ## Coordination Rules
 
@@ -366,26 +434,57 @@ Proposed M8 remainder scope (candidate, not authorized by this handoff):
 - All 13 builders follow the contract shape in `docs/governance/builder-runtime-extraction-strategy.md`.
 - No builder violates the anti-overengineering rules (no base class, no DI, no plugin system, no middleware, no CLI, no async, no web API, no caching).
 - Working tree is clean.
-- M6.1 complete (commit `ab023d6`). M7.1 complete (commit `3b811a5`). M8.1 complete (commit `7d6608f`). Next phase: remaining M8 sub-phases (proposed, requires explicit owner authorization).
+- M6.1 complete (commit `ab023d6`). M7.1 complete (commit `3b811a5`). M8.1 complete and pushed (commit `7d6608f`). M8.2 complete and pushed (commit `b2b18fb`). Next proposed phase: M9 repository assessment and ADF readiness review. M9.1 requires explicit owner authorization and is not automatically started.
 - Tests: 227 passed (M5: 215 builder/schema tests; M8.1: +12 runtime/dry-run tests).
 
 ## First Prompt For Next Session
 
 ```text
-Read coordinator-contract.md and docs/governance/extraction-handoff.md. M8.1 is complete as minimal runtime invocation (commit 7d6608f). The runtime exposes invoke_builder with explicit static builder mapping, schema validation, structured evidence, dry-run support, and optional artifact persistence. Runtime remains minimal and non-autonomous. Remaining M8 sub-phases (artifact store layout, .adf/ creation, metadata.json, full persistence) are proposed but require explicit owner authorization before any further code-producing work. If the owner has not authorized further M8 sub-phases, do NOT create .adf/ directories, registry, CLI, or adapters. Do NOT add git execution, agent invocation, or mode activation. Do NOT claim production, candidate, primary, stable, autonomous, or canonical readiness.
+Read coordinator-contract.md and docs/governance/extraction-handoff.md.
+
+Continue from M9 — Repository assessment and ADF readiness review.
+
+M8.1 is complete and pushed: minimal ADF runtime invocation.
+M8.2 is complete and pushed: extraction handoff updated after M8.1.
+M8.3 is complete and pushed: repository assessment roadmap and coordinator protocol persisted.
+
+M9 replaces the previous adapter-focused phase. The previous adapter-focused M9 is now M10 and is not authorized.
+
+Before authorizing M9.1:
+1. Verify branch and git status.
+2. Read the current coordinator contract and handoff.
+3. Confirm M9.1 scope:
+   - repository map assessment only,
+   - shallow read only,
+   - no README update,
+   - no source/test/schema/agent changes,
+   - no implementation,
+   - no adapter work.
+4. Produce or approve the exact M9.1 OpenCode prompt.
+5. Do not allow M9.1 to proceed unless owner explicitly authorizes it.
+
+Repo:
+https://github.com/cesarfreitez94/agentic-development-framework
 ```
 
 ## Risks
 
 - Losing context and restarting wrong phase.
-- Starting further M8 sub-phases without owner authorization (gated).
+- Starting M9.1 without explicit owner authorization.
+- Treating M9 repository assessment as implementation work.
+- Running one giant all-context assessment instead of clean-context subphases.
+- Creating assessment artifacts before a specific M9 subphase authorizes them.
+- Starting further M8 runtime/persistence sub-phases without owner authorization.
+- Starting M10 adapter work without owner authorization.
 - Creating `.adf/` artifact store or registry prematurely.
 - Copying FBA/Odoo coupling into runtime design.
 - Accidentally activating candidate or primary.
 - Overengineering the runtime/invocation layer beyond M6.1/M7.1 design.
 - Modifying builders, tests, or schemas during runtime phases.
-- Push remaining pending too long without review/commit.
 - Skipping M8 sub-phase authorization gate and implementing artifact store without owner approval.
+- Inventing issues, gaps, readiness claims, or production-readiness conclusions without evidence.
+- Claiming ADF is production-ready or ready for FBA integration without code, tests, docs, and governance support.
+- Skipping coordinator review before committing an assessment subphase.
 
 ## Usage
 
