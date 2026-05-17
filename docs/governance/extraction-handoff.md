@@ -45,6 +45,7 @@ This document preserves the current state, immediate roadmap, and continuation r
 - M5 — FULLY COMPLETE. All 13 programmatic builders extracted, tested, and reviewed.
 - M6.1 — Define minimal builder invocation/runtime strategy: design/governance document committed as `ab023d6`. Created `docs/governance/minimal-builder-invocation-runtime-strategy.md`. Defines the future minimal runtime as builder executor + artifact store + validation/evidence producer + framework_state update proposal producer. Runtime is explicitly non-autonomous and non-decision-making. No code, no runtime, no registry, no CLI, no adapters were created.
 - M7.1 — Define agnostic dry-run design and evidence: design/governance document created as `docs/governance/agnostic-dry-run-design-and-evidence.md`. Defines a future/conceptual dry-run as caller-driven, non-persistent, evidence-producing only. M7 is complete as design/governance. Dry-run is design-only: no builder invocation, no artifact writes, no framework_state mutation, no git execution, no agent invocation, no mode activation. Semantic comparison is review-oriented and not automatic acceptance. Pipeline scenario is illustrative, not an autonomous runtime plan. M8 requires explicit owner authorization before any code-producing work.
+- M8.1 — Implement minimal ADF runtime invocation: added `src/agentic_development_framework/runtime/__init__.py`, `src/agentic_development_framework/runtime/invocation.py`, `tests/test_runtime_invocation.py`, `tests/test_runtime_dry_run.py`. Runtime exposes `invoke_builder`. Runtime invokes explicitly selected builders via a static `_SUPPORTED_BUILDERS` mapping. Runtime validates produced artifacts against schemas and returns structured invocation evidence. Runtime supports dry-run evidence in memory without persistence, confirms no-write/no-git in dry-run evidence, and can optionally persist valid artifacts only when caller explicitly provides `store=True`, `artifact_root`, and `output_path`. Runtime produces `framework_state` proposal/preview only and does not mutate `framework_state`. Runtime remains minimal, non-autonomous, and does not invoke agents, execute git, or activate candidate or primary mode. Tests passed: 227.
 
 ## M4 Completion Record
 
@@ -126,7 +127,7 @@ All M5 phases complete. The full builder test suite passes with 215 tests.
 
 ### Latest Local HEAD
 
-- `ab023d6` — 2026-05-16 — Define minimal builder invocation runtime strategy
+- `7d6608f` — 2026-05-17 — Implement minimal ADF runtime invocation
 
 ## M6.1 Completion Record
 
@@ -170,11 +171,55 @@ M7.1 created `docs/governance/agnostic-dry-run-design-and-evidence.md`, defining
 9. **M8 requires explicit owner authorization before any code-producing work.** M7 approval does not automatically authorize M8 implementation.
 10. **All M5 and M6 prohibitions remain active.** No runtime implementation, no registry, no CLI, no adapters, no builder/schema/agent/test modification, no FBA source inspection, no candidate or primary activation, no `controlled_inspect` or `controlled_commit` implementation.
 
+## M8.1 Completion Record
+
+M8.1 implemented the minimal ADF runtime invocation (`invoke_builder`). Committed as `7d6608f`.
+
+### What M8.1 Produced
+
+- `src/agentic_development_framework/runtime/__init__.py` — exports `invoke_builder`.
+- `src/agentic_development_framework/runtime/invocation.py` — 478-line module implementing the full invocation contract.
+- `tests/test_runtime_invocation.py` — tests for builder invocation, schema validation, evidence, failure model, persistence.
+- `tests/test_runtime_dry_run.py` — tests for dry-run evidence, no-write/no-git confirmation.
+
+### Key M8.1 Implementation Decisions
+
+1. **Runtime exposes `invoke_builder` as single entry point.** The runtime is a Python callable, not an autonomous system.
+2. **Runtime uses explicit static `_SUPPORTED_BUILDERS` mapping.** All 13 builders are registered in a hardcoded dict with callable, schema_path, artifact_type, id_field, and store_dir. No dynamic discovery, no registry infrastructure, no plugin loading.
+3. **Runtime invokes explicitly selected builders only.** `builder_name` is a required parameter. The runtime never selects, discovers, or chains builders.
+4. **Runtime validates produced artifacts against schemas.** Uses `jsonschema` Draft-07 validation with structured findings output (field, issue, severity).
+5. **Runtime returns structured invocation evidence.** Success responses include artifact, validation, deterministic_check, comparison, state_update_proposal, no_write_confirmation, no_git_confirmation, timestamp. Failure responses include error_type and error_message with full structured evidence.
+6. **Runtime supports dry-run evidence in memory without persistence.** When `dry_run=True`, no artifacts, validation reports, or state are written to disk. Evidence is returned to caller only. `no_write_confirmation` and `no_git_confirmation` are always `true` in dry-run mode.
+7. **Runtime can optionally persist valid artifacts only when caller explicitly provides `store=True`, `artifact_root`, and `output_path`.** All three are required for persistence; missing any is an `OutputPathRequired` error. Output path must be under `artifact_root` or a `PathNotAllowedError` is raised.
+8. **Runtime only produces `framework_state` proposal/preview and does not mutate `framework_state`.** The `state_update_proposal` includes `preview_only: true` and `applied: false`. Proposals include `add_artifact_refs` and optionally `set_current_phase`/`update_statuses` only when explicitly supplied by caller. Conflict detection records existing artifact IDs.
+9. **Runtime follows M6.1 and M7.1 design.** The invocation contract (M6.1 Section 3.3), failure model (M6.1 Section 9), dry-run evidence model (M7.1 Section 5), non-persistence rules (M7.1 Section 6), and comparison model (M7.1 Section 7) are implemented as specified.
+
+### Boundaries Preserved
+
+- Runtime does **not** select builders, chain builders, or decide scope.
+- Runtime does **not** invoke agents or LLM reasoning.
+- Runtime does **not** execute git (`git add`, `git commit`, `git push`, or any git command).
+- Runtime does **not** activate candidate mode or primary mode.
+- Runtime does **not** implement `controlled_inspect` or `controlled_commit`.
+- Runtime does **not** create a CLI, adapters, or builder registry.
+- Runtime does **not** inspect or copy builders directly from FBA.
+- Runtime does **not** create `.adf/` directories or `metadata.json`.
+- Runtime does **not** mutate `framework_state` directly — only produces proposal/preview.
+
+### Test Suite Evidence
+
+- 227 tests passed (all tests in `tests/`).
+- 212 builder tests across 13 test files.
+- 3 schema/package tests.
+- 12 runtime tests (test_runtime_invocation.py: 149 lines, test_runtime_dry_run.py: 68 lines).
+- All tests deterministic. Zero forbidden files touched.
+
 ## Current Commits
 
 Recent relevant commits (M7.1, M6.1, plus full M5 chain):
 
-- *(pending)* Docs/governance/agnostic-dry-run-design-and-evidence (M7.1) — uncommitted, on disk
+- `7d6608f` Implement minimal ADF runtime invocation (M8.1)
+- `3b811a5` Define agnostic dry-run design and evidence (M7.1)
 - `c300802` Update extraction handoff after M6.1 completion
 - `ab023d6` Define minimal builder invocation runtime strategy (M6.1)
 - `5bc29bf` Implement ADF schema catalog builder (M5.13)
@@ -233,6 +278,10 @@ Recent relevant commits (M7.1, M6.1, plus full M5 chain):
 - `tests/test_build_decisions.py`
 - `tests/test_build_framework_state.py`
 - `tests/test_build_schema_catalog.py`
+- `src/agentic_development_framework/runtime/__init__.py`
+- `src/agentic_development_framework/runtime/invocation.py`
+- `tests/test_runtime_invocation.py`
+- `tests/test_runtime_dry_run.py`
 - `agents/opencode/orchestrator.md`
 - `agents/opencode/intake.md`
 - `agents/opencode/roadmap.md`
@@ -246,44 +295,39 @@ Recent relevant commits (M7.1, M6.1, plus full M5 chain):
 ## Not Yet Migrated / Not Yet Created
 
 - Python programmatic builders are **fully migrated** (M5.1–M5.13 complete).
-- Runtime is not created.
+- Minimal runtime exists (M8.1): `invoke_builder` with static builder mapping, schema validation, structured evidence, dry-run support, and optional artifact persistence. No registry, no CLI, no adapters, no git execution, no agent invocation, no mode activation.
+- Remaining M8 scope not yet implemented: artifact store layout (`.adf/`), `metadata.json` inventory, persistence beyond optional `store=True`.
 - Adapters are not created.
 - Candidate mode is not active.
 - `controlled_inspect` is not implemented.
 - `controlled_commit` is not implemented.
-- Builder invocation/runtime strategy exists as a design/governance document only (`docs/governance/minimal-builder-invocation-runtime-strategy.md`). No implementation.
-- Dry-run design and evidence strategy exists as a design/governance document only (`docs/governance/agnostic-dry-run-design-and-evidence.md`). No implementation.
+- Builder invocation/runtime strategy document exists (`docs/governance/minimal-builder-invocation-runtime-strategy.md`). M8.1 minimal runtime invocation is complete; broader runtime persistence/store capabilities remain incomplete and require separate authorization.
+- Dry-run design and evidence strategy exists as a design/governance document only (`docs/governance/agnostic-dry-run-design-and-evidence.md`). Dry-run evidence production is implemented in M8.1 as an in-memory mode of `invoke_builder`; no persistent dry-run artifact store exists.
 
 ## Next Phase
 
-M8 — Minimal runtime implementation (candidate/proposed, not authorized by this handoff).
+M8.1 is complete as minimal runtime invocation (`7d6608f`). The runtime exposes `invoke_builder` with explicit static builder mapping, schema validation, structured evidence, dry-run support, and optional artifact persistence. Remaining M8 scope (artifact store layout, `metadata.json` inventory, full persistence) is proposed but **requires explicit owner authorization** before any further code-producing work.
 
-M7 is complete as design/governance (`docs/governance/agnostic-dry-run-design-and-evidence.md`). M7.1 defined the dry-run evidence model, comparison method, non-persistence rules, and failure model — all design-only, no implementation. M7.1 is approved. This handoff records M7 completion only; it does not authorize M8.
+**M8.1 does not automatically authorize further M8 sub-phases.** Any additional M8 implementation — artifact store layout (`.adf/`) creation, `metadata.json` inventory, builder registry, CLI, adapters, git execution, agent invocation, or mode activation — remains gated behind explicit owner authorization.
 
-**M8 is the earliest proposed minimal runtime implementation phase, gated behind explicit owner authorization.** M7 approval does not automatically authorize M8 implementation. M8 must not begin until the owner explicitly authorizes code-producing work outside `docs/governance/`.
+Until further M8 sub-phases are authorized, the next session continues with the existing minimal runtime boundaries. Do NOT create `.adf/` directories, registry, CLI, or adapters. Do NOT add git execution, agent invocation, or mode activation. Do NOT claim candidate or primary readiness.
 
-Until M8 is authorized, the next session continues as design/governance only. Do NOT create runtime code, `.adf/` directories, registry, CLI, or adapters. Do NOT invoke builders. Do NOT activate candidate or primary mode.
-
-M8 candidate scope, not authorized by this handoff:
-- Implement the minimal runtime as a Python module in `src/agentic_development_framework/`.
-- Implement the invocation contract from M6.1 Section 3.3.
-- Implement the artifact store layout from M6.1 Section 4.
-- Implement the dry-run evidence contract from M7.1.
-- Implement schema validation integration.
-- Implement `framework_state` update proposal generation.
-- Implement the failure model from M6.1 Section 9.
-- Write runtime-specific tests (separate from builder tests).
+Proposed M8 remainder scope (candidate, not authorized by this handoff):
+- Implement the artifact store layout from M6.1 Section 4 (`.adf/artifacts/`, `metadata.json`).
+- Implement cross-invocation artifact referencing and resolution.
+- Implement validation report file persistence.
+- Extend runtime tests for multi-invocation scenarios.
 - No autonomous execution, no agent invocation, no git, no mode activation.
 
 ## Explicit Do Not Do Yet
 
 - Do not create more M5 builders (all 13 are complete).
 - Do not modify existing builders.
-- Do not modify tests.
+- Do not modify builder tests.
 - Do not modify schemas.
 - Do not modify agents.
 - Do not modify pyproject.toml.
-- Do not create runtime.
+- Do not create `.adf/` artifact store directories or `metadata.json`.
 - Do not create adapters.
 - Do not create builder registry.
 - Do not create builder CLI.
@@ -294,13 +338,13 @@ M8 candidate scope, not authorized by this handoff:
 - Do not continue V2 development inside `factory-build-agent`.
 - Do not copy FBA/Odoo-specific semantics into ADF core.
 - Do not inspect FBA source.
-- Do not begin M8 implementation without explicit owner authorization.
+- Do not begin further M8 sub-phases without explicit owner authorization.
 
 ## Recommended Order After M5
 
 - M6.1 — Define minimal builder invocation/runtime strategy (design/governance only, no implementation). **COMPLETE.**
 - M7 — Agnostic dry-run design and evidence (design/governance only). **COMPLETE.**
-- M8 — Minimal runtime implementation (earliest code phase after M7). **Requires explicit owner authorization.**
+- M8 — Minimal runtime implementation (earliest code phase after M7). **M8.1 COMPLETE.** Remaining M8 sub-phases **require explicit owner authorization.**
 - M9 — FBA adapter notes (adapter layer, not core).
 
 ## Coordination Rules
@@ -322,24 +366,26 @@ M8 candidate scope, not authorized by this handoff:
 - All 13 builders follow the contract shape in `docs/governance/builder-runtime-extraction-strategy.md`.
 - No builder violates the anti-overengineering rules (no base class, no DI, no plugin system, no middleware, no CLI, no async, no web API, no caching).
 - Working tree is clean.
-- M6.1 complete (commit `ab023d6`). M7.1 complete (docs/governance/agnostic-dry-run-design-and-evidence.md, pending commit). Next phase: M8 (minimal runtime implementation, requires explicit owner authorization).
+- M6.1 complete (commit `ab023d6`). M7.1 complete (commit `3b811a5`). M8.1 complete (commit `7d6608f`). Next phase: remaining M8 sub-phases (proposed, requires explicit owner authorization).
+- Tests: 227 passed (M5: 215 builder/schema tests; M8.1: +12 runtime/dry-run tests).
 
 ## First Prompt For Next Session
 
 ```text
-Read coordinator-contract.md and docs/governance/extraction-handoff.md. M7 is complete as design/governance (docs/governance/agnostic-dry-run-design-and-evidence.md). M8 is the next proposed phase (minimal runtime implementation) but requires explicit owner authorization before any code-producing work begins. If the owner has not authorized M8, continue as design/governance only. Do NOT create runtime code, .adf/ directories, registry, CLI, or adapters. Do NOT invoke builders. Do NOT activate candidate or primary mode. Do NOT claim production, candidate, primary, stable, autonomous, or canonical readiness.
+Read coordinator-contract.md and docs/governance/extraction-handoff.md. M8.1 is complete as minimal runtime invocation (commit 7d6608f). The runtime exposes invoke_builder with explicit static builder mapping, schema validation, structured evidence, dry-run support, and optional artifact persistence. Runtime remains minimal and non-autonomous. Remaining M8 sub-phases (artifact store layout, .adf/ creation, metadata.json, full persistence) are proposed but require explicit owner authorization before any further code-producing work. If the owner has not authorized further M8 sub-phases, do NOT create .adf/ directories, registry, CLI, or adapters. Do NOT add git execution, agent invocation, or mode activation. Do NOT claim production, candidate, primary, stable, autonomous, or canonical readiness.
 ```
 
 ## Risks
 
 - Losing context and restarting wrong phase.
-- Prematurely creating runtime without owner authorization (M8 gated).
+- Starting further M8 sub-phases without owner authorization (gated).
+- Creating `.adf/` artifact store or registry prematurely.
 - Copying FBA/Odoo coupling into runtime design.
 - Accidentally activating candidate or primary.
-- Overengineering the runtime/invocation layer.
-- Modifying builders, tests, or schemas during design/governance phases.
+- Overengineering the runtime/invocation layer beyond M6.1/M7.1 design.
+- Modifying builders, tests, or schemas during runtime phases.
 - Push remaining pending too long without review/commit.
-- Skipping M8 authorization gate and implementing runtime without owner approval.
+- Skipping M8 sub-phase authorization gate and implementing artifact store without owner approval.
 
 ## Usage
 
