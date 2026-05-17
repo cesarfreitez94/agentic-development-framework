@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document preserves the current state, immediate roadmap, and continuation rules for extracting the meta-framework from `factory-build-agent` into `agentic-development-framework`. It is intended to let a future LLM/coordinator continue in a new session without relying on prior conversational context.
+This document preserves the current state, immediate roadmap, and continuation rules for `agentic-development-framework`, originally extracted from `factory-build-agent` and now governed as an agnostic framework. It is intended to let a future LLM/coordinator continue in a new session without relying on prior conversational context.
 
 ## Current Repository
 
@@ -19,15 +19,16 @@ This document preserves the current state, immediate roadmap, and continuation r
 
 - M8.1 is complete, committed, and pushed as `7d6608f`.
 - M8.2 is complete, committed, and pushed as `b2b18fb`.
-- M8.3 persists the repository assessment roadmap and coordinator protocol before any M9 assessment or M10 adapter work.
-- M9 is repository assessment and ADF readiness review; M9.1 is proposed next but not automatically authorized.
-- M10 is FBA adapter boundary and adapter notes; M10 is not authorized by this handoff.
+- M8.3 persisted the repository assessment roadmap and coordinator protocol before any implementation or adapter work.
+- M9 is repository assessment and ADF readiness review; recent repository history records follow-up M9 assessment work.
+- M10.0 persists the OpenCode-operated, contract-driven, project-agnostic ADF direction in this handoff.
+- The next phase is an agnostic OpenCode-compatible audit/adaptation phase, not FBA integration and not autonomous-runtime evaluation.
 
 ## Source Repository
 
 - source repo: `/home/cafl/projects/factory-build-agent`
 - source status: original birthplace of the meta-framework
-- future role: FBA adapter/use case, not core
+- future role: historical birthplace and possible consumer-project example only; not core, not dependency, and not exclusive target
 
 ## Completed Phases
 
@@ -56,7 +57,8 @@ This document preserves the current state, immediate roadmap, and continuation r
 - M7.1 — Define agnostic dry-run design and evidence: design/governance document created as `docs/governance/agnostic-dry-run-design-and-evidence.md`. Defines a future/conceptual dry-run as caller-driven, non-persistent, evidence-producing only. M7 is complete as design/governance. Dry-run is design-only: no builder invocation, no artifact writes, no framework_state mutation, no git execution, no agent invocation, no mode activation. Semantic comparison is review-oriented and not automatic acceptance. Pipeline scenario is illustrative, not an autonomous runtime plan. M8 requires explicit owner authorization before any code-producing work.
 - M8.1 — Implement minimal ADF runtime invocation: added `src/agentic_development_framework/runtime/__init__.py`, `src/agentic_development_framework/runtime/invocation.py`, `tests/test_runtime_invocation.py`, `tests/test_runtime_dry_run.py`. Runtime exposes `invoke_builder`. Runtime invokes explicitly selected builders via a static `_SUPPORTED_BUILDERS` mapping. Runtime validates produced artifacts against schemas and returns structured invocation evidence. Runtime supports dry-run evidence in memory without persistence, confirms no-write/no-git in dry-run evidence, and can optionally persist valid artifacts only when caller explicitly provides `store=True`, `artifact_root`, and `output_path`. Runtime produces `framework_state` proposal/preview only and does not mutate `framework_state`. Runtime remains minimal, non-autonomous, and does not invoke agents, execute git, or activate candidate or primary mode. Tests passed: 227.
 - M8.2 — Update extraction handoff after M8.1 completion: complete, committed, and pushed as `b2b18fb` (`Update extraction handoff after M8.1 completion`). Latest HEAD/origin main was `b2b18fb` when M8.3 began.
-- M8.3 — Persist repository assessment roadmap and coordinator protocol: documentation/governance-only phase that records M9 as repository assessment/readiness review and moves previous adapter-focused M9 to M10. No runtime features, adapters, CLI, tests, schemas, agents, README update, assessment files, or `.adf/` artifact store are created by M8.3.
+- M8.3 — Persist repository assessment roadmap and coordinator protocol: documentation/governance-only phase that records M9 as repository assessment/readiness review before any adapter or specific consumer-project work. No runtime features, adapters, CLI, tests, schemas, agents, README update, assessment files, or `.adf/` artifact store are created by M8.3.
+- M10.0 — Persist OpenCode-operated ADF direction in handoff: documentation/governance-only phase that records ADF as an agnostic, contract-driven framework operated through OpenCode conventions. No commands, agents, templates, CLI, runner, git automation, candidate/primary mode, `.opencode/`, or `.adf/` structure are implemented by M10.0.
 
 ## M4 Completion Record
 
@@ -236,22 +238,59 @@ M8.2 updated this extraction handoff after M8.1 completion. It is complete, comm
 
 ## M8.3 Completion Record
 
-M8.3 persists the owner/coordinator decision that the next phase is repository assessment/readiness review before any adapter or FBA work. M8.3 is documentation/governance only and does not authorize implementation.
+M8.3 persists the owner/coordinator decision that repository assessment/readiness review must precede any adapter or specific consumer-project work. M8.3 is documentation/governance only and does not authorize implementation.
 
 ### What M8.3 Produces
 
 - Updates `coordinator-contract.md` with a repository assessment protocol for clean-context assessment phases.
 - Updates this handoff to define M9 as repository assessment and ADF readiness review.
-- Moves the previous adapter-focused M9 to M10 as `M10 — FBA adapter boundary and adapter notes`.
+- Moves previous adapter-focused work out of M9 and keeps it unauthorized until a separate owner decision.
 - Creates no assessment artifacts, runtime features, adapters, CLI, `.adf/` artifact store, source changes, test changes, schema changes, agent changes, or README update.
 
 ### Key M8.3 Decisions
 
 1. M9 is now `M9 — Repository assessment and ADF readiness review`.
-2. The previous adapter-focused M9 is now `M10 — FBA adapter boundary and adapter notes`.
-3. Before connecting ADF to FBA/adapters, the repo needs an evidence-based assessment of actual current capabilities, gaps, risks, readiness, documentation accuracy, and governance consistency.
+2. Previous adapter-focused work is not part of M9 and remains unauthorized until a separate owner decision.
+3. Before connecting ADF to any consumer project or adapter, the repo needs an evidence-based assessment of actual current capabilities, gaps, risks, readiness, documentation accuracy, and governance consistency.
 4. M9 is review/governance/documentation only unless explicitly authorized otherwise.
 5. M9.1 is the next proposed phase, but it is not automatically implemented by this handoff.
+
+## M10.0 Architectural Direction Record
+
+M10.0 persists the owner/coordinator decision that ADF must be a project-agnostic, contract-driven framework operated through OpenCode conventions. This is a documentation/governance-only phase and does not authorize implementation.
+
+### Official OpenCode Rules Confirmed
+
+The M10.0 decision was checked against the official OpenCode documentation for agents, commands, rules, and config:
+
+- `https://opencode.ai/docs/agents/`
+- `https://opencode.ai/docs/commands/`
+- `https://opencode.ai/docs/rules/`
+- `https://opencode.ai/docs/config/`
+
+Relevant confirmed rules:
+
+1. OpenCode distinguishes primary agents and subagents.
+2. Markdown agents may exist globally in `~/.config/opencode/agents/` or per project in `.opencode/agents/`.
+3. The markdown agent file name defines the agent name.
+4. Markdown commands may exist globally in `~/.config/opencode/commands/` or per project in `.opencode/commands/`.
+5. The markdown command file name defines the command name.
+6. Project rules may live in `AGENTS.md` at the project root.
+7. Global rules may live in `~/.config/opencode/AGENTS.md`.
+8. OpenCode config supports global config, project config, and `.opencode` directories, with plural subdirectories such as `agents/` and `commands/`.
+
+### M10.0 Direction
+
+1. **ADF is OpenCode-operated, not an OpenCode replacement.** ADF must use OpenCode's existing rules, agents, commands, and config conventions instead of defining a competing control plane.
+2. **ADF is contract-driven and project-agnostic.** ADF contracts, governance, and future guidance must apply to any consumer project. FBA remains a historical birthplace and possible example only, not a dependency or exclusive target.
+3. **ADF is not evaluated as an autonomous runtime in this stage.** Existing `invoke_builder` behavior remains a minimal, caller-directed builder invocation capability. Any broader runtime, runner, orchestration, or artifact-store behavior is future optional work and requires separate authorization.
+4. **Consumer projects should stay OpenCode-compatible.** ADF should be usable through project rules in `AGENTS.md`, project agents in `.opencode/agents/`, project commands in `.opencode/commands/`, global agents in `~/.config/opencode/agents/`, global commands in `~/.config/opencode/commands/`, and future local traceability under a project-owned structure such as `.adf/`.
+5. **Traceability is future local project state, not current implementation.** A future `.adf/`-style structure may hold project-local traceability if separately authorized. M10.0 does not create it.
+6. **The next phase is agnostic OpenCode-compatible audit/adaptation.** The next phase must audit and adapt ADF governance/documentation against OpenCode-compatible usage for any consumer project. It is not FBA integration.
+
+### M10.0 Non-Authorization
+
+M10.0 does not authorize commands, agents, templates, CLI, runner, git automation, candidate mode, primary mode, autonomous runtime behavior, adapter implementation, `.opencode/` creation, `.adf/` creation, schema changes, code changes, tests, README changes, or global OpenCode installation/configuration.
 
 ## Current Commits
 
@@ -337,9 +376,10 @@ Recent relevant commits:
 - Python programmatic builders are **fully migrated** (M5.1–M5.13 complete).
 - Minimal runtime exists (M8.1): `invoke_builder` with static builder mapping, schema validation, structured evidence, dry-run support, and optional artifact persistence. No registry, no CLI, no adapters, no git execution, no agent invocation, no mode activation.
 - Remaining M8 runtime/persistence scope is not authorized by this handoff: artifact store layout (`.adf/`), `metadata.json` inventory, and persistence beyond optional `store=True` remain gated.
-- Repository assessment artifacts are not created yet; M9.1 has not started.
-- Adapters are not created. Adapter-focused work has moved from M9 to M10 and is not authorized by this handoff.
-- ADF is not claimed production-ready and is not claimed ready for FBA integration.
+- M10.0 does not create or modify repository assessment artifacts; any M9 assessment artifacts remain governed by their own completed phases.
+- Adapters are not created. Consumer-project adapter or integration work is future optional and is not authorized by this handoff.
+- ADF is not claimed production-ready and is not claimed ready for integration into any specific consumer project.
+- ADF is not FBA-specific. FBA is only a historical birthplace and possible example consumer project.
 - Candidate mode is not active.
 - `controlled_inspect` is not implemented.
 - `controlled_commit` is not implemented.
@@ -348,25 +388,13 @@ Recent relevant commits:
 
 ## Next Phase
 
-M8.1 is complete, committed, and pushed as minimal runtime invocation (`7d6608f`). M8.2 is complete, committed, and pushed as extraction handoff update (`b2b18fb`). The latest HEAD/origin main when M8.3 began was `b2b18fb` (`Update extraction handoff after M8.1 completion`).
+M10.0 is the current documentation/governance-only handoff update. It records that ADF is an OpenCode-operated, contract-driven, project-agnostic framework.
 
-M9 is now defined as `M9 — Repository assessment and ADF readiness review`. The previous adapter-focused M9 is moved to `M10 — FBA adapter boundary and adapter notes`.
+The next proposed phase is an agnostic OpenCode-compatible audit/adaptation phase. Its purpose is to check ADF governance, documentation, contracts, and future guidance against official OpenCode conventions for any consumer project.
 
-Reason for this roadmap change: before connecting ADF to FBA/adapters, the repo needs an evidence-based assessment of actual current capabilities, gaps, risks, readiness, documentation accuracy, and governance consistency.
+The next phase is not FBA integration. It must not implement runtime features, create adapters, create commands, create agents, create templates, create CLI, create a runner, activate candidate or primary mode, add git automation, add agent invocation, mutate `framework_state`, or create `.opencode/` or `.adf/` structures unless separately authorized.
 
-M9 is review/governance/documentation only unless explicitly authorized otherwise. M9 must not implement runtime features, create adapters, create CLI, activate candidate or primary mode, add git execution, add agent invocation, mutate `framework_state`, or create `.adf/` artifact store unless separately authorized.
-
-M9 must be executed as separate clean-context subphases to avoid context pollution:
-
-- M9.1 — Repository map assessment.
-- M9.2 — Governance and milestone consistency assessment.
-- M9.3 — Code/runtime/schema assessment.
-- M9.4 — Tests/agents/documentation assessment.
-- M9.5 — Consolidated repository assessment + README/handoff update.
-
-Each M9 subphase must be run in a separate OpenCode session/prompt. Each M9 subphase must produce a persistent assessment artifact or controlled documentation update. Each M9 subphase requires coordinator review before commit.
-
-M9.1 is the next proposed phase, but it is not automatically implemented by this handoff. M10 adapter work is not authorized.
+FBA may remain a historical example, but no next-phase work may treat FBA as a dependency, exclusive target, or required integration path.
 
 ## Explicit Do Not Do Yet
 
@@ -379,10 +407,12 @@ M9.1 is the next proposed phase, but it is not automatically implemented by this
 - Do not create `.adf/` artifact store directories or `metadata.json` unless separately authorized.
 - Do not create assessment files before an explicit M9 subphase prompt authorizes them.
 - Do not create `docs/governance/assessment/**` or `docs/governance/repository-assessment.md` during M8.3.
-- Do not start M9.1 unless the owner explicitly authorizes it.
+- Do not start any next phase unless the owner explicitly authorizes it.
 - Do not treat M9 as an implementation phase.
 - Do not implement runtime features during M9 unless explicitly authorized otherwise.
-- Do not create adapters. Adapter work is now M10 and is not authorized by this handoff.
+- Do not create adapters or integrations for any specific consumer project.
+- Do not create OpenCode commands, agents, templates, CLI, runner, or git automation.
+- Do not create `.opencode/` or install/write global OpenCode config.
 - Do not create builder registry.
 - Do not create builder CLI.
 - Do not activate candidate.
@@ -394,11 +424,11 @@ M9.1 is the next proposed phase, but it is not automatically implemented by this
 - Do not implement `controlled_commit`.
 - Do not continue V2 development inside `factory-build-agent`.
 - Do not copy FBA/Odoo-specific semantics into ADF core.
-- Do not inspect FBA source.
+- Do not inspect FBA source or treat FBA as a dependency, exclusive target, or required integration path.
 - Do not begin further M8 sub-phases without explicit owner authorization.
-- Do not begin M10 adapter boundary or adapter notes without explicit owner authorization.
+- Do not begin consumer-project adapter boundary or adapter notes without explicit owner authorization.
 - Do not claim the repository is production-ready.
-- Do not claim ADF is ready for FBA integration.
+- Do not claim ADF is ready for any specific consumer-project integration.
 
 ## Recommended Order
 
@@ -407,13 +437,15 @@ M9.1 is the next proposed phase, but it is not automatically implemented by this
 - M8.1 — Minimal runtime invocation. **COMPLETE, COMMITTED, PUSHED.**
 - M8.2 — Extraction handoff update after M8.1. **COMPLETE, COMMITTED, PUSHED.**
 - M8.3 — Repository assessment roadmap and coordinator protocol. Documentation/governance only; no runtime behavior changes. **COMPLETE when this handoff and coordinator contract are reviewed, committed, and pushed.**
-- M9 — Repository assessment and ADF readiness review. **NEXT PROPOSED PHASE; NOT AUTOMATICALLY STARTED.**
-- M9.1 — Repository map assessment. **NEXT PROPOSED SUBPHASE; requires explicit owner authorization.**
-- M9.2 — Governance and milestone consistency assessment. Requires separate clean-context session and coordinator review.
-- M9.3 — Code/runtime/schema assessment. Requires separate clean-context session and coordinator review.
-- M9.4 — Tests/agents/documentation assessment. Requires separate clean-context session and coordinator review.
-- M9.5 — Consolidated repository assessment + README/handoff update. Requires separate clean-context session and coordinator review.
-- M10 — FBA adapter boundary and adapter notes. **NOT AUTHORIZED.**
+- M9 — Repository assessment and ADF readiness review. Assessment history is outside M10.0 scope and is not modified here.
+- M9.1 — Repository map assessment.
+- M9.2 — Governance and milestone consistency assessment.
+- M9.3 — Code/runtime/schema assessment.
+- M9.4 — Tests/agents/documentation assessment.
+- M9.5 — Consolidated repository assessment + README/handoff update.
+- M10.0 — Persist OpenCode-operated ADF direction in handoff. Documentation/governance only; no implementation. **CURRENT PHASE.**
+- Next proposed phase — Agnostic OpenCode-compatible audit/adaptation. **NOT AUTOMATICALLY STARTED; NOT FBA INTEGRATION.**
+- Consumer-project adapter or integration work. **FUTURE OPTIONAL; NOT AUTHORIZED.**
 
 ## Coordination Rules
 
@@ -442,26 +474,28 @@ M9.1 is the next proposed phase, but it is not automatically implemented by this
 ```text
 Read coordinator-contract.md and docs/governance/extraction-handoff.md.
 
-Continue from M9 — Repository assessment and ADF readiness review.
+Continue from M10.0 — OpenCode-operated ADF direction persisted in handoff.
 
 M8.1 is complete and pushed: minimal ADF runtime invocation.
 M8.2 is complete and pushed: extraction handoff updated after M8.1.
 M8.3 is complete and pushed: repository assessment roadmap and coordinator protocol persisted.
+M10.0 is documentation/governance only: ADF is now explicitly recorded as an OpenCode-operated, contract-driven, project-agnostic framework.
 
-M9 replaces the previous adapter-focused phase. The previous adapter-focused M9 is now M10 and is not authorized.
+ADF is not FBA-specific, not an OpenCode replacement, and not being evaluated as an autonomous runtime in this stage. FBA is a historical birthplace and possible example only, not a dependency or exclusive target.
 
-Before authorizing M9.1:
+Before authorizing the next phase:
 1. Verify branch and git status.
 2. Read the current coordinator contract and handoff.
-3. Confirm M9.1 scope:
-   - repository map assessment only,
-   - shallow read only,
+3. Confirm the scope is agnostic OpenCode-compatible audit/adaptation:
+   - contrast ADF governance/documentation/contracts against official OpenCode conventions,
+   - preserve OpenCode-compatible project rules, agents, commands, and config structure,
    - no README update,
    - no source/test/schema/agent changes,
    - no implementation,
-   - no adapter work.
-4. Produce or approve the exact M9.1 OpenCode prompt.
-5. Do not allow M9.1 to proceed unless owner explicitly authorizes it.
+   - no commands, agents, templates, CLI, runner, git automation, `.opencode/`, or `.adf/` creation,
+   - no adapter work and no FBA integration.
+4. Produce or approve the exact next-phase OpenCode prompt.
+5. Do not allow the next phase to proceed unless owner explicitly authorizes it.
 
 Repo:
 https://github.com/cesarfreitez94/agentic-development-framework
@@ -475,15 +509,18 @@ https://github.com/cesarfreitez94/agentic-development-framework
 - Running one giant all-context assessment instead of clean-context subphases.
 - Creating assessment artifacts before a specific M9 subphase authorizes them.
 - Starting further M8 runtime/persistence sub-phases without owner authorization.
-- Starting M10 adapter work without owner authorization.
+- Starting consumer-project adapter work without owner authorization.
 - Creating `.adf/` artifact store or registry prematurely.
 - Copying FBA/Odoo coupling into runtime design.
+- Treating FBA as a dependency, exclusive target, or required integration path.
+- Treating ADF as a replacement for OpenCode instead of an OpenCode-operated framework.
+- Evaluating or presenting ADF as an autonomous runtime at this stage.
 - Accidentally activating candidate or primary.
 - Overengineering the runtime/invocation layer beyond M6.1/M7.1 design.
 - Modifying builders, tests, or schemas during runtime phases.
 - Skipping M8 sub-phase authorization gate and implementing artifact store without owner approval.
 - Inventing issues, gaps, readiness claims, or production-readiness conclusions without evidence.
-- Claiming ADF is production-ready or ready for FBA integration without code, tests, docs, and governance support.
+- Claiming ADF is production-ready or ready for any specific consumer-project integration without code, tests, docs, and governance support.
 - Skipping coordinator review before committing an assessment subphase.
 
 ## Usage
