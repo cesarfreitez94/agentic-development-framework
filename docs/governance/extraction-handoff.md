@@ -43,6 +43,7 @@ This document preserves the current state, immediate roadmap, and continuation r
 - M5.12 — build_framework_state: implemented and tested.
 - M5.13 — build_schema_catalog: implemented and tested.
 - M5 — FULLY COMPLETE. All 13 programmatic builders extracted, tested, and reviewed.
+- M6.1 — Define minimal builder invocation/runtime strategy: design/governance document committed as `ab023d6`. Created `docs/governance/minimal-builder-invocation-runtime-strategy.md`. Defines the future minimal runtime as builder executor + artifact store + validation/evidence producer + framework_state update proposal producer. Runtime is explicitly non-autonomous and non-decision-making. No code, no runtime, no registry, no CLI, no adapters were created.
 
 ## M4 Completion Record
 
@@ -124,12 +125,32 @@ All M5 phases complete. The full builder test suite passes with 215 tests.
 
 ### Latest Local HEAD
 
-- `5bc29bf` — 2026-05-16 — Implement ADF schema catalog builder
+- `ab023d6` — 2026-05-16 — Define minimal builder invocation runtime strategy
+
+## M6.1 Completion Record
+
+M6.1 created `docs/governance/minimal-builder-invocation-runtime-strategy.md`, defining the design-only, governance-only strategy for a future minimal runtime. Committed as `ab023d6`.
+
+### What M6.1 Produced
+
+- One design/governance document (`docs/governance/minimal-builder-invocation-runtime-strategy.md`).
+- No code, no runtime, no registry, no CLI, no adapters, no tests.
+
+### Key M6.1 Decisions
+
+1. **Runtime executes explicit caller-selected builder invocations only.** The runtime never selects builders, decides scope, gates, priority, or acceptance, nor invokes agents or activates modes.
+2. **Inputs are explicit only.** No ambient reads, env vars, repo scanning, or hidden state.
+3. **Invalid artifacts are not stored as canonical artifacts.** They may only be failure evidence or quarantine output.
+4. **Runtime never mutates `framework_state` directly.** It produces update proposals only.
+5. **Runtime may include `current_phase`/`status` updates only if explicitly supplied by caller/orchestrator.**
+6. **Candidate and primary remain inactive.**
+7. **No runtime, registry, CLI, adapters, tests, schemas, agents, or builders were changed.**
 
 ## Current Commits
 
-Recent relevant commits (full M5 chain):
+Recent relevant commits (M6.1, plus full M5 chain):
 
+- `ab023d6` Define minimal builder invocation runtime strategy (M6.1)
 - `5bc29bf` Implement ADF schema catalog builder (M5.13)
 - `d55e550` Implement ADF framework state builder (M5.12)
 - `50b7a2e` Implement ADF decisions builder (M5.11)
@@ -152,6 +173,7 @@ Recent relevant commits (full M5 chain):
 - `docs/agents/agent-contract.md`
 - `docs/governance/candidate-mode-plan.md`
 - `docs/governance/implementation-protocol.md`
+- `docs/governance/minimal-builder-invocation-runtime-strategy.md`
 - `docs/governance/builder-runtime-extraction-strategy.md`
 - `docs/governance/m5-remaining-schema-audit.md`
 - `schemas/meta/*.schema.json` (13 schema contracts)
@@ -202,25 +224,24 @@ Recent relevant commits (full M5 chain):
 - Candidate mode is not active.
 - `controlled_inspect` is not implemented.
 - `controlled_commit` is not implemented.
-- No builder invocation/runtime strategy exists yet.
+- Builder invocation/runtime strategy exists as a design/governance document only (`docs/governance/minimal-builder-invocation-runtime-strategy.md`). No implementation.
 
 ## Next Phase
 
-M6 — Design minimal builder invocation/runtime strategy.
+M7 — Agnostic dry-run design and evidence.
 
-All M5 builder phases are complete. The next phase must shift from builder extraction to runtime/invocation design. M6 should:
+M6.1 is complete (design/governance document committed as `ab023d6`). The next phase must design the dry-run mode for the runtime before any implementation begins. M7 should:
 
-- Design a minimal strategy for invoking builders (sequencing, input wiring, output storage).
-- Define the artifact store layout (e.g., `.adf/artifacts/`).
-- Define how `framework_state` is updated by builder invocations.
-- Define the boundary between the runtime (builder executor) and the orchestrator (agentic coordination).
+- Design a dry-run mode that invokes builders without writing artifacts to disk.
+- Define evidence collection: what traces, diffs, and validation reports a dry-run produces.
+- Design the comparison method between agent-produced outputs and builder-produced outputs (semantic equivalence, not byte equality).
+- Define how dry-run results inform future implementation decisions.
 - Remain a design/governance phase: no runtime implementation yet.
-- Follow the runtime boundary defined in `docs/governance/builder-runtime-extraction-strategy.md` section 11.
+- Follow the runtime boundary defined in `docs/governance/minimal-builder-invocation-runtime-strategy.md`.
 - Not activate candidate or primary mode.
 - Not modify builders, schemas, agents, or tests.
 
-Alternative naming if the existing roadmap naming differs:
-- Next phase pending coordinator decision: minimal runtime/orchestration design after M5 builder completion.
+M8 remains the earliest proposed minimal runtime implementation phase, gated behind M7 approval and explicit owner authorization to write code outside `docs/governance/`.
 
 ## Explicit Do Not Do Yet
 
@@ -244,9 +265,9 @@ Alternative naming if the existing roadmap naming differs:
 
 ## Recommended Order After M5
 
-- M6 — Design minimal builder invocation/runtime strategy (design/governance only, no implementation).
-- M7 — Agnostic dry-run with builder pipeline.
-- M8 — Minimal runtime design and implementation.
+- M6.1 — Define minimal builder invocation/runtime strategy (design/governance only, no implementation). **COMPLETE.**
+- M7 — Agnostic dry-run design and evidence (design/governance only).
+- M8 — Minimal runtime implementation (earliest code phase after M7).
 - M9 — FBA adapter notes (adapter layer, not core).
 
 ## Coordination Rules
@@ -268,12 +289,12 @@ Alternative naming if the existing roadmap naming differs:
 - All 13 builders follow the contract shape in `docs/governance/builder-runtime-extraction-strategy.md`.
 - No builder violates the anti-overengineering rules (no base class, no DI, no plugin system, no middleware, no CLI, no async, no web API, no caching).
 - Working tree is clean.
-- Next phase: M6 (minimal builder invocation/runtime strategy design).
+- M6.1 complete (commit `ab023d6`). Next phase: M7 (agnostic dry-run design/evidence).
 
 ## First Prompt For Next Session
 
 ```text
-Read coordinator-contract.md and docs/governance/extraction-handoff.md. Continue from M6 — Design minimal builder invocation/runtime strategy. All M5 builders are complete (13 builders, 215 tests passing). Do not modify builders, tests, schemas, agents, or pyproject.toml. Do not create runtime or adapters. Do not activate candidate or primary mode. Follow the runtime boundary defined in docs/governance/builder-runtime-extraction-strategy.md section 11.
+Read coordinator-contract.md and docs/governance/extraction-handoff.md. Continue from M7 — Agnostic dry-run design and evidence. M6.1 is complete (docs/governance/minimal-builder-invocation-runtime-strategy.md, commit ab023d6). Do not modify builders, tests, schemas, agents, or pyproject.toml. Do not create runtime or adapters. Do not activate candidate or primary mode. Follow the runtime boundary defined in docs/governance/minimal-builder-invocation-runtime-strategy.md.
 ```
 
 ## Risks
