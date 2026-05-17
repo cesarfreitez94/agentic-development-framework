@@ -1,6 +1,7 @@
 """ADF programmatic builders."""
 
 from .context_bundle import build_context_bundle
+from .git_operation import build_git_operation
 from .implementation_report import build_implementation_report
 from .intent import build_intent, SchemaValidationError
 from .plan import build_plan
@@ -12,6 +13,7 @@ from .test_report import build_test_report
 
 __all__ = [
     "build_context_bundle",
+    "build_git_operation",
     "build_implementation_report",
     "build_intent",
     "build_plan",
